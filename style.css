@@ -44,7 +44,7 @@
   --space-xl:  2rem;
 
   /* Layout */
-  --sidebar-width: 220px;
+  --sidebar-width: 250px;
   --wrapper-max:   960px;
   --header-height: 180px;
   --logo-bg:       var(--color-brand-yellow);
@@ -136,7 +136,7 @@ header {
 
 /* PRESERVED: logo block with yellow background */
 #logo {
-  width: 240px;
+  width: 260px;
   min-height: 120px;
   background-color: var(--logo-bg);
   display: flex;
@@ -297,18 +297,8 @@ article h3 {
   color: var(--color-text);
 }
 
-/* Company address block (replaces original <p><h4> invalid nesting) */
 .redesign-company-address {
   font-style: normal;
-  margin-bottom: var(--space-md);
-  line-height: 1.8;
-}
-.redesign-company-address strong {
-  font-size: 1.05rem;
-}
-.redesign-reg {
-  font-size: 0.85rem;
-  color: var(--color-text-light);
 }
 
 /* Contact definition list (replaces presentational <table>) */
@@ -327,6 +317,25 @@ article h3 {
   margin: 0;
 }
 
+.redesign-sections-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 var(--space-xl);
+}
+
+.redesign-sections-col {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--color-border);
+  padding-right: var(--space-xl);
+}
+
+.redesign-sections-col:last-child {
+  border-right: none;
+  padding-right: 0;
+  padding-left: var(--space-xl);
+}
+
 .redesign-contact-section {
   margin-bottom: var(--space-lg);
 }
@@ -337,10 +346,20 @@ hr {
   margin: var(--space-lg) 0;
 }
 
-.parnteri {
+.redesign-partners {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: var(--space-xl);
+  flex-wrap: wrap;
+}
+
+.redesign-partner {
+  flex: 1 1 200px;
+}
+
+.redesign-partner h4 {
+  font-size: 0.95rem;
+  margin-bottom: var(--space-sm);
+  color: var(--color-text);
 }
 
 /* ─── 9. FOOTER ─────────────────────────────────────────────── */
@@ -436,5 +455,24 @@ footer {
   }
   .redesign-contact-list dt {
     margin-top: var(--space-sm);
+  }
+
+  .redesign-sections-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .redesign-sections-col,
+  .redesign-sections-col:last-child {
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+    padding-right: 0;
+    padding-left: 0;
+    padding-bottom: var(--space-lg);
+    margin-bottom: var(--space-lg);
+  }
+
+  .redesign-sections-col:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
   }
 }
