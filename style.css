@@ -1,105 +1,440 @@
-/* CSS Document */
+/* =============================================================
+   PODEM Česká republika — Redesigned stylesheet
+   Replaces the original fixed-width float layout.
 
-html{
- width:100%;
- height:100%;
-  color: #656565;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 75%;
+   HOW TO CUSTOMIZE:
+   ─ Colors:     Edit the CSS variables in :root below.
+   ─ Typography: Change --font-body / --font-size-base in :root.
+   ─ Spacing:    Adjust --space-* tokens.
+   ─ Breakpoints: sm = 600px, md = 768px, lg = 960px
+   ============================================================= */
+
+/* ─── 1. DESIGN TOKENS (CSS variables) ─────────────────────── */
+:root {
+  /* Brand colors */
+  --color-brand-yellow:   #ffdd00;
+  --color-brand-yellow-dark: #e6c700; /* hover state */
+  --color-nav-bg:         #111111;
+  --color-nav-text:       #ffffff;
+  --color-nav-active:     #ffdd00;
+
+  /* Page chrome */
+  --color-bg-page:        #e8e8e8;
+  --color-bg-card:        #ffffff;
+  --color-footer-bg:      #6f7075;
+  --color-footer-text:    #ffffff;
+  --color-border:         #d8d8d8;
+
+  /* Body text */
+  --color-text:           #444444;
+  --color-text-light:     #666666;
+  --color-link:           #1a5c99;
+  --color-link-hover:     #0d3d6e;
+
+  /* Typography */
+  --font-body: Arial, Helvetica, sans-serif;
+  --font-size-base: 1rem;       /* = 16px in modern browsers */
+  --line-height: 1.6;
+
+  /* Spacing scale */
+  --space-xs:  0.25rem;
+  --space-sm:  0.5rem;
+  --space-md:  1rem;
+  --space-lg:  1.5rem;
+  --space-xl:  2rem;
+
+  /* Layout */
+  --sidebar-width: 220px;
+  --wrapper-max:   960px;
+  --header-height: 180px;
+  --logo-bg:       var(--color-brand-yellow);
 }
-#wrapper{
- max-width:910px;
- width:100%;
- margin:20px auto;
- background-color: white;
- box-shadow: 0 0 10px 2px rgba(0,0,0,0.4); 
+
+/* ─── 2. RESET / BASE ───────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-header{
-background-image: url(img/header_inner.jpg);
-background-repeat: no-repeat;
-background-position: center center;
-background-size: 100% 100%;
-width:100%;
-height:180px;
-} 
-#logo{
- width:240px;
- height:120px;
- display: inline-block;
- background-color: #ffdd00;
+
+html {
+  font-size: 100%; /* 16px base — replaces legacy 75% */
+  scroll-behavior: smooth;
 }
-#logo img{
-width:200px;
-height:39px;
-margin: auto;
-padding: 40px 0 0 0;
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height);
+  color: var(--color-text);
+  background-color: var(--color-bg-page);
+  background-image: url(img/body_bg.jpg); /* original body bg if present */
+  background-repeat: repeat;
 }
-.active{color:#FD0;} 
-nav{
- text-align:right;
- height:60px;
-}
-nav ul{
- background-color: black;
- width: 670px;
- height:60px;
- display:inline-block;
- margin:0;
-}
-nav ul li{
+
+ul {
   list-style: none;
-    display: inline;
+  padding: 0;
 }
-nav a{
-  color: white;
-  text-align:center;
-  line-height:60px;
-  padding:0 28px;
-  background-color: black;
-  text-decoration: none;
-} 
-nav a:hover{
-color:#FD0;
-} 
-.nav a{
- text-decoration: none;
- color: black;   
-}
-.nav a:hover{color: #999;}
 
- ul{
- list-style: none;
- padding-left:0;
+a {
+  color: var(--color-link);
+  text-decoration: none;
 }
- ul ul{ padding:5px 0 0 10px;}
- ul ul li{
- margin: 0px 0px 0px 0px;
-  padding: 5px 2px 5px 2px;
- }
-.nav>li{
-border-top: 1px solid #d8d8d8;
-margin: 0px 0px 0px 0px;
-  padding: 5px 2px 5px 2px;
+a:hover,
+a:focus {
+  color: var(--color-link-hover);
+  text-decoration: underline;
 }
-footer{
-  clear: both;
-  background: #6f7075;
+
+/* Visible focus ring for keyboard users */
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--color-brand-yellow);
+  outline-offset: 2px;
+}
+
+/* ─── 3. SKIP LINK (accessibility) ─────────────────────────── */
+/* Normally hidden off-screen; appears on focus for keyboard users */
+.skip-link {
+  position: absolute;
+  top: -999px;
+  left: var(--space-md);
+  z-index: 9999;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-nav-bg);
+  color: var(--color-nav-text);
+  font-weight: bold;
+  border-radius: 0 0 4px 4px;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* ─── 4. PAGE WRAPPER ───────────────────────────────────────── */
+#wrapper {
+  max-width: var(--wrapper-max);
+  width: 100%;
+  margin: 0 auto var(--space-xl) auto;
+  background-color: var(--color-bg-card);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
+}
+
+/* ─── 5. HEADER ─────────────────────────────────────────────── */
+header {
+  /* PRESERVED: original header background image */
+  background-image: url(img/header_inner.jpg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  min-height: var(--header-height);
+  position: relative;
+}
+
+/* PRESERVED: logo block with yellow background */
+#logo {
+  width: 240px;
+  min-height: 120px;
+  background-color: var(--logo-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* PRESERVED: logo image — src="img/logo.png" untouched in HTML */
+#logo img {
+  width: 200px;
+  height: auto;        /* was fixed 39px; auto keeps aspect ratio */
+  display: block;
+}
+
+/* ─── 5a. TOP NAVIGATION ────────────────────────────────────── */
+/* PRESERVED: all hrefs, all link text */
+#primary-nav {
+  flex: 1;
+  align-self: flex-end;
+  background-color: var(--color-nav-bg);
+}
+
+#primary-nav ul {
+  display: flex;
+  flex-wrap: wrap;
   height: 60px;
+  align-items: stretch;
+}
+
+#primary-nav ul li {
+  display: flex;
+}
+
+#primary-nav a {
+  color: var(--color-nav-text);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-lg);
+  background-color: transparent;
+  white-space: nowrap;
+  transition: background-color 0.15s, color 0.15s;
+}
+#primary-nav a:hover,
+#primary-nav a:focus {
+  color: var(--color-nav-active);
+  text-decoration: none;
+}
+
+/* PRESERVED: .active class highlight */
+#primary-nav a.active,
+.active {
+  color: var(--color-nav-active);
+}
+
+/* ─── 5b. MOBILE MENU TOGGLE ────────────────────────────────── */
+.redesign-menu-toggle {
+  display: none; /* hidden on desktop */
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  background: var(--color-nav-bg);
+  border: none;
+  padding: var(--space-sm);
+  cursor: pointer;
+  gap: 5px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+}
+
+.redesign-hamburger {
+  display: block;
+  width: 24px;
+  height: 3px;
+  background: var(--color-nav-text);
+  border-radius: 2px;
+  margin: 2px 0;
+}
+
+/* ─── 6. CONTENT GRID ───────────────────────────────────────── */
+/* Desktop: two-column (sidebar left, main right)
+   Mobile:  single column (sidebar below main on small screens) */
+.redesign-content-grid {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  grid-template-areas: "sidebar main";
+  align-items: start;
+}
+
+aside {
+  grid-area: sidebar;
+  padding: var(--space-lg) var(--space-md);
+  border-right: 1px solid var(--color-border);
+}
+
+main {
+  grid-area: main;
+  padding: var(--space-lg) var(--space-xl);
+}
+
+/* ─── 7. SIDEBAR / SIDE NAVIGATION ─────────────────────────── */
+/* PRESERVED: .nav and .sub-menu classes; all hrefs and text */
+aside h2 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-light);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-xs);
+  border-bottom: 2px solid var(--color-brand-yellow);
+}
+
+.nav a {
+  text-decoration: none;
+  color: var(--color-text);
+  font-size: 0.9rem;
+}
+.nav a:hover,
+.nav a:focus {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+.nav > li {
+  border-top: 1px solid var(--color-border);
+  padding: var(--space-sm) var(--space-xs);
+}
+.nav > li:first-child {
+  border-top: none;
+}
+
+/* Sub-menu indented under parent */
+.sub-menu {
+  padding: var(--space-xs) 0 0 var(--space-md);
+}
+.sub-menu li {
+  padding: var(--space-xs) var(--space-xs);
+  font-size: 0.85rem;
+}
+
+/* ─── 8. MAIN CONTENT / ARTICLE ─────────────────────────────── */
+article h2 {
+  font-size: 1.3rem;
+  color: var(--color-text);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 3px solid var(--color-brand-yellow);
+}
+
+article h3 {
+  font-size: 1rem;
+  margin: var(--space-lg) 0 var(--space-sm);
+  color: var(--color-text);
+}
+
+/* Company address block (replaces original <p><h4> invalid nesting) */
+.redesign-company-address {
+  font-style: normal;
+  margin-bottom: var(--space-md);
+  line-height: 1.8;
+}
+.redesign-company-address strong {
+  font-size: 1.05rem;
+}
+.redesign-reg {
+  font-size: 0.85rem;
+  color: var(--color-text-light);
+}
+
+/* Contact definition list (replaces presentational <table>) */
+.redesign-contact-list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--space-xs) var(--space-md);
+  font-size: 0.95rem;
+  margin-top: var(--space-sm);
+}
+.redesign-contact-list dt {
+  font-weight: bold;
+  color: var(--color-text-light);
+}
+.redesign-contact-list dd {
+  margin: 0;
+}
+
+.redesign-contact-section {
+  margin-bottom: var(--space-lg);
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: var(--space-lg) 0;
+}
+
+.parnteri {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ─── 9. FOOTER ─────────────────────────────────────────────── */
+footer {
+  background-color: var(--color-footer-bg);
+  color: var(--color-footer-text);
   text-align: center;
-  color:white;
+  padding: var(--space-md);
+  font-size: 0.85rem;
 }
-article,aside{
-  padding: 20px;
+
+/* ─── 10. RESPONSIVE BREAKPOINTS ────────────────────────────── */
+
+/* Medium: tablet (≤ 768px) — shrink sidebar */
+@media (max-width: 768px) {
+  :root {
+    --sidebar-width: 180px;
+  }
+  #logo {
+    width: 180px;
+    min-height: 90px;
+  }
+  #logo img {
+    width: 150px;
+  }
 }
-aside{
- float:left;
- width: 200px;
- height:100%;
+
+/* Small: mobile (≤ 600px) — single column, show hamburger */
+@media (max-width: 600px) {
+  #wrapper {
+    margin: 0;
+    box-shadow: none;
+  }
+
+  header {
+    min-height: auto;
+    flex-wrap: wrap;
+  }
+
+  #logo {
+    width: 100%;
+    min-height: 70px;
+    justify-content: flex-start;
+    padding-left: var(--space-md);
+  }
+
+  /* Show hamburger, hide desktop nav by default */
+  .redesign-menu-toggle {
+    display: flex;
+  }
+
+  #primary-nav {
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+  }
+
+  /* JS adds this class to reveal menu */
+  #primary-nav.redesign-nav-open {
+    max-height: 400px;
+  }
+
+  #primary-nav ul {
+    flex-direction: column;
+    height: auto;
+  }
+
+  #primary-nav a {
+    padding: var(--space-md) var(--space-lg);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Stack sidebar below main on mobile */
+  .redesign-content-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "main"
+      "sidebar";
+  }
+
+  aside {
+    border-right: none;
+    border-top: 1px solid var(--color-border);
+  }
+
+  main {
+    padding: var(--space-md);
+  }
+
+  .redesign-contact-list {
+    grid-template-columns: 1fr;
+  }
+  .redesign-contact-list dt {
+    margin-top: var(--space-sm);
+  }
 }
-article{
- width: 620px;
- float:right;
-}
-footer p{
- line-height:60px;
-}                                  
